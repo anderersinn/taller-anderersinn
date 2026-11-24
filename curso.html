@@ -37,7 +37,14 @@
   </header>
 
   <main id="contenido" class="page-main">
-    <section class="state-panel" id="pending-view">
+    <section class="loading-view container" id="loading-view" aria-live="polite">
+      <span class="loading-mark" aria-hidden="true"></span>
+      <p class="eyebrow">Verificando acceso</p>
+      <h1>Un momento…</h1>
+      <p>Estamos comprobando tu sesión y tus permisos antes de mostrar el contenido.</p>
+    </section>
+
+    <section class="state-panel" id="pending-view" hidden>
       <p class="eyebrow">Acceso protegido</p>
       <h1>Configuración del aula pendiente</h1>
       <p id="pending-detail">Esta página está reservada para cuentas autorizadas.</p>
@@ -50,8 +57,8 @@
     <div id="course-view" hidden>
       <section class="course-hero container">
         <p class="eyebrow">Vista general del curso</p>
-        <h1>Sprint de Diseño de Producto Tech</h1>
-        <p class="course-hero__lede">Anderer Sinn — Aula virtual. Cinco semanas, dos módulos por semana y un proyecto de portafolio.</p>
+        <h1 id="course-title">Sprint de Diseño de Producto Tech</h1>
+        <p class="course-hero__lede" id="course-subtitle">Anderer Sinn — Aula virtual. Cinco semanas, dos módulos por semana y un proyecto de portafolio.</p>
       </section>
 
       <section class="container course-layout" aria-label="Contenido del curso">

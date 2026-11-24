@@ -26,7 +26,7 @@
         <strong>Sprint de Diseño de Producto Tech</strong>
       </div>
       <div class="site-header__actions">
-        <span class="status-chip">Configuración pendiente</span>
+        <span class="status-chip">Acceso con Google</span>
       </div>
     </div>
   </header>
@@ -40,10 +40,10 @@
           <p class="hero__lede">Cinco semanas para comprender una comunidad, descubrir oportunidades y convertir una idea en un prototipo tecnológico que puedas probar y mostrar.</p>
 
           <div class="hero__actions">
-            <button class="btn btn--clay btn--large" type="button" disabled>Continuar con Google</button>
+            <button class="btn btn--clay btn--large" type="button" id="sign-in" disabled>Continuar con Google</button>
             <a class="btn btn--outline btn--large" href="./curso.html?preview=1">Ver vista previa del aula</a>
           </div>
-          <p class="hero__note">El acceso se activará cuando se publique la configuración de Firebase y las reglas de Firestore.</p>
+          <p class="hero__note" id="home-auth-note">El acceso se activará cuando se publique la configuración de Firebase y las reglas de Firestore.</p>
 
           <dl class="quickfacts" aria-label="Datos del curso">
             <div>
@@ -117,5 +117,7 @@
       <p>Sprint de diseño de producto tech · Laboratorio de diseño y creación tecnológica.</p>
     </div>
   </footer>
+
+  <script type="module" src="./assets/js/home.js"></script>
 </body>
 </html>

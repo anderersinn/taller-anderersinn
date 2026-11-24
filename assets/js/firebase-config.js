@@ -1,10 +1,10 @@
 export const firebaseConfig = {
-  apiKey: 'REEMPLAZAR_API_KEY',
-  authDomain: 'REEMPLAZAR_PROJECT_ID.firebaseapp.com',
-  projectId: 'REEMPLAZAR_PROJECT_ID',
-  storageBucket: 'REEMPLAZAR_PROJECT_ID.firebasestorage.app',
-  messagingSenderId: 'REEMPLAZAR_SENDER_ID',
-  appId: 'REEMPLAZAR_APP_ID'
+  apiKey: 'AIzaSyC05mEUhZ3kz2ksZqyv1WR8VdhzR4A42Gc',
+  authDomain: 'taller-anderersinn.firebaseapp.com',
+  projectId: 'taller-anderersinn',
+  storageBucket: 'taller-anderersinn.firebasestorage.app',
+  messagingSenderId: '328529235229',
+  appId: '1:328529235229:web:172e9b11b43a65bc4f65f4'
 };
 
 export const COURSE_ID = 'sprint-diseno-producto-tech';

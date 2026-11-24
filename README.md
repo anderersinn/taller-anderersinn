@@ -4,12 +4,16 @@ Prototipo estático del aula virtual para el *Sprint de Diseño de Producto Tech
 
 ## Estado actual
 
-Entregable de la Fase 1: páginas, menú visual e identidad de Anderer Sinn.
+Integración completa del frontend con Firebase Authentication y Cloud Firestore.
 
-- Las cinco páginas están creadas: `index.html`, `curso.html`, `semana.html`, `acceso-no-disponible.html` y `404.html`.
-- Las páginas protegidas muestran un estado neutro de configuración pendiente.
-- La vista previa visual se abre con `?preview=1` y usa únicamente títulos públicos del currículo.
-- No hay enlaces a Drive, Forms, correos de estudiantes ni manifiestos privados en este repositorio.
+- Inicio de sesión con Google desde `index.html` y desde la página de acceso no disponible.
+- Guard de autorización en `curso.html` y `semana.html` antes de leer cualquier documento del curso.
+- Autorización activa mediante `students/{uid}` o `admins/{uid}`.
+- Navegación construida desde `courses/{courseId}`.
+- Contenido semanal construido desde `courses/{courseId}/weeks/{weekId}`.
+- Listener de revocación sobre el documento que concedió el acceso.
+- Cierre de sesión que limpia la vista privada.
+- La vista previa `?preview=1` sigue disponible solo para revisión visual con datos públicos.
 - `firestore.rules` se copió sin cambios desde `lms_docs_bundle/`.
 
 ## Estructura
@@ -28,10 +32,16 @@ aula-anderer-sinn/
     ├── js/
     │   ├── app-path.js
     │   ├── firebase-config.js
+    │   ├── firebase-init.js
+    │   ├── auth.js
+    │   ├── access-guard.js
+    │   ├── course-repository.js
+    │   ├── data.js
     │   ├── ui.js
     │   ├── preview-data.js
     │   ├── navigation.js
     │   ├── course-content.js
+    │   ├── home.js
     │   ├── protected-page.js
     │   └── access-page.js
     └── img/
@@ -39,6 +49,15 @@ aula-anderer-sinn/
         ├── logo-black.png
         └── logo.png
 ```
+
+## Configuración fija
+
+- `courseId`: `sprint-diseno-producto-tech`
+- Colecciones: `students`, `admins`, `courses`
+- Subcolección: `courses/{courseId}/weeks`
+- Dominio autorizado: el host exacto de GitHub Pages, sin `https://` ni ruta.
+
+La configuración pública de Firebase vive en `assets/js/firebase-config.js`. No es una credencial administrativa. No se deben usar claves de cuenta de servicio ni Admin SDK en el navegador.
 
 ## Ver localmente
 
@@ -51,47 +70,45 @@ python3 -m http.server 8000
 Luego abre:
 
 - `http://localhost:8000/`
+- `http://localhost:8000/curso.html`
+- `http://localhost:8000/semana.html?semana=1`
 - `http://localhost:8000/curso.html?preview=1`
 - `http://localhost:8000/semana.html?semana=1&preview=1`
+- `http://localhost:8000/acceso-no-disponible.html?reason=session`
 - `http://localhost:8000/acceso-no-disponible.html?reason=permission`
 - `http://localhost:8000/acceso-no-disponible.html?reason=error`
 - `http://localhost:8000/ruta-inexistente.html`
 
+Para probar sesión real en local, `localhost` debe estar en Firebase Authentication → Settings → Authorized domains.
+
 La ruta `?preview=1` solo existe para revisar el diseño. No es un mecanismo de acceso.
 
-## Próxima configuración
+## Flujo de acceso
 
-Según `lms_docs_bundle/manual-instalacion.md`, se debe completar:
+1. `index.html` ofrece “Continuar con Google”.
+2. `onAuthStateChanged` confirma la sesión.
+3. El guard lee `students/{uid}`; si no autoriza, comprueba `admins/{uid}`.
+4. Solo después de autorizar se leen `courses/{courseId}` y la semana solicitada.
+5. Firestore vuelve a aplicar las reglas en cada lectura.
+6. Si cambia `active`, el listener cierra la vista y redirige a acceso no disponible.
+7. Ante `permission-denied`, error de red o configuración, la aplicación no muestra contenido privado.
 
-1. Repositorio GitHub y GitHub Pages desde la rama principal, carpeta raíz.
-2. Proyecto Firebase y aplicación web.
-3. Proveedor de Google en Authentication.
-4. Dominio autorizado exacto de GitHub Pages, por ejemplo `TU_USUARIO.github.io`, sin `https://` ni ruta.
-5. Cloud Firestore en modo producción.
-6. Reglas publicadas desde `firestore.rules`.
+## Pruebas antes de matricular estudiantes
 
-Valores pendientes para la siguiente fase:
+Sigue los criterios de `lms_docs_bundle/requerimientos_lms_estatico.md` y el manual de instalación.
 
-```javascript
-const firebaseConfig = {
-  apiKey: 'REEMPLAZAR_API_KEY',
-  authDomain: 'REEMPLAZAR_PROJECT_ID.firebaseapp.com',
-  projectId: 'REEMPLAZAR_PROJECT_ID',
-  storageBucket: 'REEMPLAZAR_PROJECT_ID.firebasestorage.app',
-  messagingSenderId: 'REEMPLAZAR_SENDER_ID',
-  appId: 'REEMPLAZAR_APP_ID'
-};
+- Sin sesión: abrir `curso.html` y `semana.html?semana=1` debe llevar a `reason=session`.
+- Cuenta autenticada sin documento: debe mostrar `reason=permission`.
+- Cuenta con `active: false`: debe mostrar `reason=permission`.
+- Cuenta activa sin el `courseId`: debe mostrar `reason=permission`.
+- Cuenta autorizada: debe ver menú y semanas publicadas.
+- Rules Playground: un usuario no autenticado no debe poder leer `courses/sprint-diseno-producto-tech`.
+- Un estudiante no debe leer el documento de otro ni listar colecciones.
+- Desactivar un estudiante en una sesión activa debe cerrar la vista del curso.
+- Drive debe permanecer en modo Restringido.
+- Cada Google Forms restringido debe tener configurados sus respondientes.
 
-const COURSE_ID = 'sprint-diseno-producto-tech';
-```
-
-Esos valores públicos se copiarán en `assets/js/firebase-config.js`. No se deben usar claves de cuenta de servicio ni Admin SDK en el navegador.
-
-## Seguridad
-
-GitHub Pages publica el HTML, CSS y JavaScript. La protección real se implementará con Firebase Authentication y Firestore Security Rules. El contenido privado vivirá en Firestore y los archivos en Google Drive con permisos restringidos.
-
-Después de configurar Firebase se integrarán el guard de autorización, la navegación desde `courses/{courseId}` y el renderizado de semanas desde `courses/{courseId}/weeks/{weekId}`.
+No matricules estudiantes hasta que todas las pruebas pasen.
 
 ## Manuales de referencia
 

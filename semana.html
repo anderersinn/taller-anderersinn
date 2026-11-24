@@ -37,7 +37,14 @@
   </header>
 
   <main id="contenido" class="page-main">
-    <section class="state-panel" id="pending-view">
+    <section class="loading-view container" id="loading-view" aria-live="polite">
+      <span class="loading-mark" aria-hidden="true"></span>
+      <p class="eyebrow">Verificando acceso</p>
+      <h1>Un momento…</h1>
+      <p>Estamos comprobando tu sesión y tus permisos antes de mostrar el contenido.</p>
+    </section>
+
+    <section class="state-panel" id="pending-view" hidden>
       <p class="eyebrow">Acceso protegido</p>
       <h1>Configuración del aula pendiente</h1>
       <p id="pending-detail">Esta página está reservada para cuentas autorizadas.</p>

@@ -26,3 +26,19 @@ export function setText(id, text) {
     node.textContent = text;
   }
 }
+
+export function setAccountLabel(node, text) {
+  if (!node) return;
+  node.textContent = text || '';
+  node.hidden = !text;
+}
+
+export function renderState(container, config) {
+  if (!container) return;
+  clear(container);
+  const panel = createEl('div', 'state-panel state-panel--inline');
+  panel.append(createEl('p', 'eyebrow', config.kicker));
+  panel.append(createEl('h2', '', config.title));
+  panel.append(createEl('p', '', config.message));
+  container.append(panel);
+}
