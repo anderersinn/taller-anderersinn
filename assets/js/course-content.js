@@ -2,7 +2,7 @@ import { appUrl } from './app-path.js';
 import { clear, createEl } from './ui.js';
 import { isEmbedUrl } from './data.js';
 
-const EMPTY_NOTE = 'Los materiales se publicarán desde Firestore cuando el aula esté configurada.';
+const EMPTY_NOTE = 'Los materiales se publicarán desde Firestore cuando el taller virtual esté configurado.';
 const TYPE_LABELS = {
   video: 'Video',
   document: 'Documento',
@@ -123,7 +123,7 @@ export function renderCourseSummary(container, course, weeks) {
   container.append(previewNotice());
 
   const intro = createEl('div', 'course-summary__intro');
-  intro.append(createEl('p', 'eyebrow', 'Aula virtual'));
+  intro.append(createEl('p', 'eyebrow', 'Taller virtual'));
   intro.append(createEl('h2', '', course.title));
   intro.append(createEl('p', 'course-summary__lede', course.description));
   container.append(intro);
@@ -136,7 +136,7 @@ export function renderLiveCourseSummary(container, course, weeks) {
   clear(container);
 
   const intro = createEl('div', 'course-summary__intro');
-  intro.append(createEl('p', 'eyebrow', 'Aula virtual'));
+  intro.append(createEl('p', 'eyebrow', 'Taller virtual'));
   intro.append(createEl('h2', '', course.title));
   if (course.description) {
     intro.append(createEl('p', 'course-summary__lede', course.description));

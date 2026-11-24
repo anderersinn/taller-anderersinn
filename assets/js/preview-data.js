@@ -2,7 +2,7 @@ export const COURSE_ID = 'sprint-diseno-producto-tech';
 
 export const PREVIEW_COURSE = {
   title: 'Sprint de Diseño de Producto Tech',
-  subtitle: 'Anderer Sinn — Aula virtual',
+  subtitle: 'Anderer Sinn — Taller virtual',
   description: 'Cinco semanas para pasar de una necesidad real a un prototipo tecnológico que puedas probar y mostrar.'
 };
 

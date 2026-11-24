@@ -1,6 +1,6 @@
-# Aula virtual Anderer Sinn
+# Taller virtual Anderer Sinn
 
-Prototipo estático del aula virtual para el *Sprint de Diseño de Producto Tech*.
+Prototipo estático del taller virtual para el *Sprint de Diseño de Producto Tech*.
 
 ## Estado actual
 

@@ -18,7 +18,7 @@ const targetUrl = safeNext(params.get('next') || 'curso.html');
 const VIEWS = {
   session: {
     kicker: 'Sesión no activa',
-    title: 'Inicia sesión para entrar al aula',
+    title: 'Inicia sesión para entrar al taller virtual',
     message:
       'Tu sesión no está activa. Inicia sesión con la cuenta de Google que utilizas para el curso.',
     note: 'Usa la misma cuenta Google que emplearás para el curso.'

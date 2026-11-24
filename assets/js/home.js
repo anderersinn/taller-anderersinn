@@ -12,7 +12,7 @@ function byId(id) {
 
 function render() {
   if (!button) return;
-  button.textContent = user ? 'Entrar al aula' : 'Continuar con Google';
+  button.textContent = user ? 'Entrar al taller virtual' : 'Continuar con Google';
   button.disabled = !FIREBASE_CONFIGURED;
   if (note) {
     note.textContent = FIREBASE_CONFIGURED

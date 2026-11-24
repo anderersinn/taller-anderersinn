@@ -108,7 +108,7 @@ function renderPreview() {
         'week-description',
         'Dos momentos de trabajo: la sesión sincrónica y el trabajo asincrónico.'
       );
-      document.title = `${activeWeek.title} | Aula Anderer Sinn`;
+      document.title = `${activeWeek.title} | Taller virtual Anderer Sinn`;
       renderWeekContent(byId('week-content'), activeWeek, PREVIEW_MODULES);
     }
   } else {
@@ -189,7 +189,7 @@ async function loadContent() {
     'week-description',
     week.description || 'Dos momentos de trabajo: la sesión sincrónica y el trabajo asincrónico.'
   );
-  document.title = `${week.title} | Aula Anderer Sinn`;
+  document.title = `${week.title} | Taller virtual Anderer Sinn`;
   renderLiveWeekContent(byId('week-content'), week, week.modules);
 }
 

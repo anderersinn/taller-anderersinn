@@ -46,7 +46,7 @@ export function normalizeCourse(data) {
 
   return {
     title: data.title,
-    subtitle: isNonEmptyString(data.subtitle) ? data.subtitle : 'Anderer Sinn — Aula virtual',
+    subtitle: isNonEmptyString(data.subtitle) ? data.subtitle : 'Anderer Sinn — Taller virtual',
     description: isNonEmptyString(data.description) ? data.description : '',
     modules: normalizeCourseModules(data.modules),
     weeks: normalizeWeeks(data.weeks)
