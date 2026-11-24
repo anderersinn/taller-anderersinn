@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="./">
+  <meta name="theme-color" content="#f5f0e7">
+  <title>Semana | Aula Anderer Sinn</title>
+  <meta name="description" content="Contenido semanal del Sprint de Diseño de Producto Tech.">
+  <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body data-page="week">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="./index.html" aria-label="Anderer Sinn, inicio del aula">
+        <img class="brand__logo" src="./assets/img/logo-black.png" alt="Anderer Sinn" width="2069" height="600">
+      </a>
+      <div class="site-header__context">
+        <span class="eyebrow">Aula virtual</span>
+        <strong>Sprint de Diseño de Producto Tech</strong>
+      </div>
+      <div class="site-header__actions">
+        <span class="account-chip" id="account-label" hidden></span>
+        <button class="btn btn--small btn--outline" type="button" id="sign-out" hidden>Cerrar sesión</button>
+        <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="week-nav">
+          <span class="nav-toggle__lines" aria-hidden="true"><span></span><span></span></span>
+          <span>Menú</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido" class="page-main">
+    <section class="state-panel" id="pending-view">
+      <p class="eyebrow">Acceso protegido</p>
+      <h1>Configuración del aula pendiente</h1>
+      <p id="pending-detail">Esta página está reservada para cuentas autorizadas.</p>
+      <div class="hero__actions">
+        <a class="btn btn--outline" href="./index.html">Volver al inicio</a>
+        <a class="btn btn--dark" href="./semana.html?semana=1&preview=1">Ver vista previa</a>
+      </div>
+    </section>
+
+    <div id="week-view" hidden>
+      <section class="container lesson-hero">
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="./curso.html?preview=1">Curso</a>
+          <span aria-hidden="true">/</span>
+          <span>Semana</span>
+        </nav>
+        <p class="eyebrow" id="week-kicker">Semana</p>
+        <h1 id="week-title">Semana</h1>
+        <p class="lesson-lede" id="week-description"></p>
+      </section>
+
+      <section class="container course-layout" aria-label="Contenido de la semana">
+        <aside class="week-sidebar">
+          <div class="week-sidebar__head">
+            <p class="eyebrow">Navegación</p>
+            <h2>Semanas</h2>
+          </div>
+          <nav id="week-nav" aria-label="Semanas del curso"></nav>
+        </aside>
+        <div class="course-main">
+          <div id="week-content"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="./assets/img/logo.png" alt="Anderer Sinn" width="2069" height="600" loading="lazy">
+        <p>Diseño de tecnología con enfoque en producto.</p>
+      </div>
+      <div class="footer-col">
+        <h2>Aula</h2>
+        <a href="./index.html">Inicio</a>
+        <a href="./curso.html">Curso</a>
+        <a href="./acceso-no-disponible.html">Acceso</a>
+      </div>
+      <div class="footer-col">
+        <h2>Estudio</h2>
+        <a href="https://anderersinn.com" target="_blank" rel="noopener noreferrer">anderersinn.com</a>
+        <a href="https://www.instagram.com/anderersinn/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.linkedin.com/company/anderer-sinn-design-studio" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="mailto:contact@anderersinn.com">contact@anderersinn.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Anderer Sinn. Todos los derechos reservados.</p>
+      <p>Sprint de diseño de producto tech · Laboratorio de diseño y creación tecnológica.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./assets/js/protected-page.js"></script>
+</body>
+</html>
