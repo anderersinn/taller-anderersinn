@@ -1,3 +1,4 @@
+import './footer-admin-link.js';
 import { COURSE_ID, FIREBASE_CONFIGURED } from './firebase-config.js';
 import {
   PREVIEW_COURSE,

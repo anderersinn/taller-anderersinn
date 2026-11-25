@@ -13,7 +13,7 @@ Integración completa del frontend con Firebase Authentication y Cloud Firestore
 - Contenido semanal construido desde `courses/{courseId}/weeks/{weekId}`.
 - Listener de revocación sobre el documento que concedió el acceso.
 - Registro de un ingreso por sesión en `students/{uid}/logins` para estudiantes activos.
-- Página `analitica.html` solo para administradores activos, con resumen, tabla semanal y gráfico SVG.
+- Página `analitica.html` solo para administradores activos, con resumen, tabla semanal y gráfico con Chart.js desde CDN, con aviso si falla. El footer muestra el enlace solo para administradores.
 - Cierre de sesión que limpia la vista privada.
 - La vista previa `?preview=1` sigue disponible solo para revisión visual con datos públicos.
 - `firestore.rules` se mantiene sincronizado con `lms_docs_bundle/firestore.rules`.
@@ -39,8 +39,9 @@ aula-anderer-sinn/
     │   ├── auth.js
     │   ├── access-guard.js
     │   ├── login-log.js
-    │   ├── admin-analytics.js
-    │   ├── course-repository.js
+     │   ├── admin-analytics.js
+     │   ├── footer-admin-link.js
+     │   ├── course-repository.js
     │   ├── data.js
     │   ├── ui.js
     │   ├── preview-data.js
@@ -111,7 +112,7 @@ Sigue los criterios de `lms_docs_bundle/requerimientos_lms_estatico.md` y el man
 - Cuenta activa sin el `courseId`: debe mostrar `reason=permission`.
 - Cuenta autorizada: debe ver menú y semanas publicadas.
 - Estudiante en `analitica.html`: debe mostrar `reason=permission`.
-- Administrador en `analitica.html`: debe ver selector, totales, tabla y gráfico.
+- Administrador en `analitica.html`: debe ver selector, totales, tabla y gráfico; con la CDN bloqueada, debe ver el aviso y la tabla.
 - Rules Playground: un usuario no autenticado no debe poder leer `courses/sprint-diseno-producto-tech` ni la subcolección `logins`.
 - Un estudiante no debe leer el documento de otro ni listar colecciones.
 - Recargar el aula en la misma sesión no debe crear un segundo evento en `logins`.

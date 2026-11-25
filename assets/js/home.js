@@ -1,3 +1,4 @@
+import './footer-admin-link.js';
 import { appUrl } from './app-path.js';
 import { FIREBASE_CONFIGURED } from './firebase-config.js';
 import { getCurrentUser, observeAuth, prepareAuth, signInGoogle } from './auth.js';

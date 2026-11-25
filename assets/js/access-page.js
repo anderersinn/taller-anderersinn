@@ -1,3 +1,4 @@
+import './footer-admin-link.js';
 import { appUrl, safeNext } from './app-path.js';
 import { byId, clear, createEl, setAccountLabel, setText } from './ui.js';
 import {

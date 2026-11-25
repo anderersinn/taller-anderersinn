@@ -1,3 +1,4 @@
+import './footer-admin-link.js';
 import { collection, getDocs, limit, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { COURSE_ID, FIREBASE_CONFIGURED } from './firebase-config.js';
 import { db } from './firebase-init.js';
@@ -8,8 +9,8 @@ import { authorizeAdmin, watchAuthorization } from './access-guard.js';
 import { clearStudentLoginSession } from './login-log.js';
 import { isActiveStudent, isPermissionDenied } from './data.js';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 const MAX_EVENTS = 500;
+const CHART_FALLBACK = 'No se pudo cargar el gráfico. La tabla de frecuencia sigue disponible.';
 
 const loadingView = byId('loading-view');
 const adminView = byId('admin-view');
@@ -24,6 +25,7 @@ let initialUid = null;
 let stopAdminWatch = null;
 let stopAuthWatch = null;
 let students = [];
+let loginChart = null;
 
 function showLoading() {
   loadingView.hidden = false;
@@ -172,103 +174,115 @@ function renderTable(weeks) {
   container.append(table);
 }
 
-function svgEl(tag, attributes) {
-  const element = document.createElementNS(SVG_NS, tag);
-  Object.entries(attributes).forEach(([name, value]) => {
-    element.setAttribute(name, String(value));
-  });
-  return element;
+function withAlpha(color, alpha) {
+  const match = /^#([0-9a-f]{6})$/i.exec(color);
+  if (!match) return color;
+
+  const value = match[1];
+  const red = parseInt(value.slice(0, 2), 16);
+  const green = parseInt(value.slice(2, 4), 16);
+  const blue = parseInt(value.slice(4, 6), 16);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function renderChartFallback(container) {
+  clear(container);
+  container.append(createEl('p', 'chart__fallback', CHART_FALLBACK));
 }
 
 function renderChart(weeks) {
   const container = byId('login-chart');
-  clear(container);
+  if (!container) return;
 
-  const width = 640;
-  const height = 260;
-  const padding = { top: 18, right: 18, bottom: 46, left: 42 };
-  const innerWidth = width - padding.left - padding.right;
-  const innerHeight = height - padding.top - padding.bottom;
-  const step = Math.max(1, Math.ceil(Math.max(...weeks.map((week) => week.count)) / 4));
-  const top = step * 4;
-
-  const xFor = (index) =>
-    weeks.length === 1
-      ? padding.left + innerWidth / 2
-      : padding.left + (index * innerWidth) / (weeks.length - 1);
-  const yFor = (value) => padding.top + innerHeight - (value / top) * innerHeight;
-
-  const svg = svgEl('svg', {
-    viewBox: `0 0 ${width} ${height}`,
-    role: 'img',
-    'aria-label': 'Gráfico de ingresos por semana'
-  });
-  const title = svgEl('title', {});
-  title.textContent = 'Ingresos por semana';
-  svg.append(title);
-
-  for (let tick = 0; tick <= 4; tick += 1) {
-    const value = step * tick;
-    const y = yFor(value);
-    svg.append(
-      svgEl('line', {
-        x1: padding.left,
-        y1: y,
-        x2: width - padding.right,
-        y2: y,
-        class: 'chart__grid'
-      })
-    );
-    const label = svgEl('text', {
-      x: padding.left - 10,
-      y: y + 4,
-      'text-anchor': 'end',
-      class: 'chart__label'
-    });
-    label.textContent = String(value);
-    svg.append(label);
+  if (loginChart) {
+    loginChart.destroy();
+    loginChart = null;
   }
 
-  const path = weeks
-    .map((week, index) => `${index === 0 ? 'M' : 'L'}${xFor(index)} ${yFor(week.count)}`)
-    .join(' ');
-  svg.append(svgEl('path', { d: path, class: 'chart__line' }));
+  if (typeof Chart === 'undefined') {
+    renderChartFallback(container);
+    return;
+  }
 
-  const labelEvery = Math.max(1, Math.ceil(weeks.length / 8));
-  const shownLabels = new Set();
+  const styles = getComputedStyle(document.documentElement);
+  const clay = styles.getPropertyValue('--clay').trim() || '#9d4327';
+  const paper = styles.getPropertyValue('--paper').trim() || '#fbf8f2';
+  const inkSoft = styles.getPropertyValue('--ink-3').trim() || '#6b6258';
+  const line = styles.getPropertyValue('--line').trim() || 'rgba(23, 19, 15, 0.14)';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  weeks.forEach((week, index) => {
-    const dot = svgEl('circle', {
-      cx: xFor(index),
-      cy: yFor(week.count),
-      r: 4,
-      class: 'chart__dot'
+  clear(container);
+  const canvas = createEl('canvas', 'chart__canvas');
+  canvas.setAttribute('role', 'img');
+  canvas.setAttribute('aria-label', 'Gráfico de ingresos por semana');
+  container.append(canvas);
+
+  try {
+    loginChart = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: weeks.map((week) => week.week),
+        datasets: [
+          {
+            label: 'Ingresos',
+            data: weeks.map((week) => week.count),
+            borderColor: clay,
+            backgroundColor: withAlpha(clay, 0.12),
+            pointBackgroundColor: clay,
+            pointBorderColor: paper,
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0.25,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: reduceMotion ? 0 : 600 },
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => `${context.parsed.y} ingreso(s)`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: inkSoft,
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 8,
+              callback: (value, index) => String(weeks[index]?.week || value).slice(5)
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: line },
+            ticks: { color: inkSoft, precision: 0 }
+          }
+        }
+      }
     });
-    const tooltip = svgEl('title', {});
-    tooltip.textContent = `${week.week}: ${week.count}`;
-    dot.append(tooltip);
-    svg.append(dot);
-
-    const isLast = index === weeks.length - 1;
-    if (index % labelEvery !== 0 && !isLast) return;
-    if (isLast && shownLabels.has(index)) return;
-    shownLabels.add(index);
-
-    const label = svgEl('text', {
-      x: xFor(index),
-      y: height - padding.bottom + 20,
-      'text-anchor': 'middle',
-      class: 'chart__label'
-    });
-    label.textContent = week.week.slice(5);
-    svg.append(label);
-  });
-
-  container.append(svg);
+  } catch {
+    loginChart = null;
+    renderChartFallback(container);
+  }
 }
 
 function renderAnalytics(student, dates) {
   if (dates.length === 0) {
+    if (loginChart) {
+      loginChart.destroy();
+      loginChart = null;
+    }
+    clear(byId('login-chart'));
     setState(
       'Sin ingresos',
       'No hay ingresos registrados',
@@ -318,6 +332,11 @@ async function loadStudents() {
   renderStudentOptions();
 
   if (students.length === 0) {
+    if (loginChart) {
+      loginChart.destroy();
+      loginChart = null;
+    }
+    clear(byId('login-chart'));
     studentSelect.disabled = true;
     setState(
       'Sin estudiantes',
