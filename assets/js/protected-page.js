@@ -17,6 +17,7 @@ import { appUrl, currentNext, goToAccess } from './app-path.js';
 import { byId, clear, setAccountLabel, setText } from './ui.js';
 import { observeAuth, prepareAuth, signOutGoogle } from './auth.js';
 import { authorizeUser, watchAuthorization } from './access-guard.js';
+import { clearStudentLoginSession, recordStudentLogin } from './login-log.js';
 import { readCourse, readWeek } from './course-repository.js';
 import { isPermissionDenied, isSafeId, normalizeCourse, normalizeWeek } from './data.js';
 
@@ -193,12 +194,13 @@ async function loadContent() {
   renderLiveWeekContent(byId('week-content'), week, week.modules);
 }
 
-function wireSignOut() {
+function wireSignOut(uid) {
   if (!signOutButton) return;
   signOutButton.hidden = false;
   signOutButton.addEventListener('click', async () => {
     if (finished) return;
     finished = true;
+    clearStudentLoginSession(uid);
     clearPrivateContent();
     stopWatches();
     try {
@@ -217,8 +219,11 @@ async function initializeForUser(user) {
   }
 
   setAccountLabel(byId('account-label'), user.email || user.displayName || 'Cuenta Google');
-  wireSignOut();
+  wireSignOut(user.uid);
   stopRoleWatch = watchAuthorization(authorization, COURSE_ID, redirect);
+  if (authorization.kind === 'student') {
+    recordStudentLogin(user.uid).catch(() => undefined);
+  }
   await loadContent();
 }
 

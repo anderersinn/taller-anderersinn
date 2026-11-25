@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="./">
+  <meta name="theme-color" content="#f5f0e7">
+  <title>Analítica de ingresos | Taller virtual Anderer Sinn</title>
+  <meta name="description" content="Analítica de ingresos de estudiantes del taller virtual.">
+  <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body data-page="analytics">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="./index.html" aria-label="Anderer Sinn, inicio del taller virtual">
+        <img class="brand__logo" src="./assets/img/logo-black.png" alt="Anderer Sinn" width="2069" height="600">
+      </a>
+      <div class="site-header__context">
+        <span class="eyebrow">Taller virtual</span>
+        <strong>Sprint de Diseño de Producto Tech</strong>
+      </div>
+      <div class="site-header__actions">
+        <span class="account-chip" id="account-label" hidden></span>
+        <button class="btn btn--small btn--outline" type="button" id="sign-out" hidden>Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido" class="page-main">
+    <section class="loading-view container" id="loading-view" aria-live="polite">
+      <span class="loading-mark" aria-hidden="true"></span>
+      <p class="eyebrow">Verificando acceso</p>
+      <h1>Un momento…</h1>
+      <p>Estamos comprobando tu sesión y tus permisos de administrador.</p>
+    </section>
+
+    <div id="admin-view" hidden>
+      <section class="container lesson-hero">
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="./curso.html">Curso</a>
+          <span aria-hidden="true">/</span>
+          <span>Analítica</span>
+        </nav>
+        <p class="eyebrow">Herramienta interna</p>
+        <h1>Analítica de ingresos</h1>
+        <p class="lesson-lede">Selecciona un estudiante para ver cuántas veces ha entrado, la fecha más reciente y la frecuencia por semana.</p>
+      </section>
+
+      <section class="container analytics-controls">
+        <label for="student-select">Estudiante</label>
+        <select class="analytics-select" id="student-select" disabled></select>
+      </section>
+
+      <section class="container state-panel state-panel--inline" id="analytics-state" aria-live="polite" hidden>
+        <p class="eyebrow" id="analytics-state-kicker">Sin datos</p>
+        <h2 id="analytics-state-title">No hay información para mostrar</h2>
+        <p id="analytics-state-message"></p>
+      </section>
+
+      <div id="analytics-content" hidden>
+        <section class="container analytics-summary" id="analytics-summary" aria-label="Resumen de ingresos"></section>
+
+        <div class="container analytics-grid">
+          <section class="analytics-panel">
+            <h2>Frecuencia por semana</h2>
+            <div class="chart" id="login-chart"></div>
+          </section>
+          <section class="analytics-panel">
+            <h2>Detalle por semana</h2>
+            <div id="week-table"></div>
+          </section>
+        </div>
+
+        <section class="container analytics-footnote">
+          <p>Los registros se crean una vez por sesión del estudiante. Son informativos: dependen del navegador y no sustituyen una herramienta de auditoría.</p>
+          <a class="btn btn--outline" href="./curso.html">Volver al curso</a>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="./assets/img/logo.png" alt="Anderer Sinn" width="2069" height="600" loading="lazy">
+        <p>Diseño de tecnología con enfoque en producto.</p>
+      </div>
+      <div class="footer-col">
+        <h2>Taller virtual</h2>
+        <a href="./index.html">Inicio</a>
+        <a href="./curso.html">Curso</a>
+        <a href="./acceso-no-disponible.html">Acceso</a>
+      </div>
+      <div class="footer-col">
+        <h2>Estudio</h2>
+        <a href="https://anderersinn.com" target="_blank" rel="noopener noreferrer">anderersinn.com</a>
+        <a href="https://www.instagram.com/anderersinn/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.linkedin.com/company/anderer-sinn-design-studio" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="mailto:contact@anderersinn.com">contact@anderersinn.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Anderer Sinn. Todos los derechos reservados.</p>
+      <p>Sprint de diseño de producto tech · Laboratorio de diseño y creación tecnológica.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./assets/js/admin-analytics.js"></script>
+</body>
+</html>

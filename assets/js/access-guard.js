@@ -20,6 +20,17 @@ export async function authorizeUser(user, courseId) {
   return null;
 }
 
+export async function authorizeAdmin(user) {
+  const ref = doc(db, 'admins', user.uid);
+  const snapshot = await getDoc(ref);
+
+  if (snapshot.exists() && isActiveAdmin(snapshot.data())) {
+    return { kind: 'admin', uid: user.uid, ref, data: snapshot.data() };
+  }
+
+  return null;
+}
+
 export function watchAuthorization(authorization, courseId, onLost) {
   return onSnapshot(
     authorization.ref,

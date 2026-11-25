@@ -12,12 +12,15 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
     }
 
+    function activeStudentInCourse(uid, courseId) {
+      return exists(/databases/$(database)/documents/students/$(uid))
+        && get(/databases/$(database)/documents/students/$(uid)).data.active == true
+        && get(/databases/$(database)/documents/students/$(uid)).data.courseIds is list
+        && get(/databases/$(database)/documents/students/$(uid)).data.courseIds.hasAny([courseId]);
+    }
+
     function hasCourseAccess(courseId) {
-      return signedIn()
-        && exists(/databases/$(database)/documents/students/$(request.auth.uid))
-        && get(/databases/$(database)/documents/students/$(request.auth.uid)).data.active == true
-        && get(/databases/$(database)/documents/students/$(request.auth.uid)).data.courseIds is list
-        && get(/databases/$(database)/documents/students/$(request.auth.uid)).data.courseIds.hasAny([courseId]);
+      return signedIn() && activeStudentInCourse(request.auth.uid, courseId);
     }
 
     match /admins/{uid} {
@@ -29,7 +32,22 @@ service cloud.firestore {
     match /students/{uid} {
       // Cada estudiante solo puede consultar su propio documento de autorización.
       allow get: if signedIn() && request.auth.uid == uid;
-      allow list, create, update, delete: if false;
+      allow list: if isAdmin();
+      allow create, update, delete: if false;
+
+      match /logins/{loginId} {
+        allow get, list: if isAdmin();
+        allow create: if signedIn()
+          && request.auth.uid == uid
+          && request.resource.data.keys().hasAll(['uid', 'courseId', 'at'])
+          && request.resource.data.keys().hasOnly(['uid', 'courseId', 'at'])
+          && request.resource.data.uid == uid
+          && request.resource.data.courseId is string
+          && request.resource.data.courseId.size() > 0
+          && activeStudentInCourse(uid, request.resource.data.courseId)
+          && request.resource.data.at == request.time;
+        allow update, delete: if false;
+      }
     }
 
     match /courses/{courseId} {
